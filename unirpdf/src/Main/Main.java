@@ -10,7 +10,11 @@ import Gestores.GestorPersonas;
 import Pojos.Registro;
 import Utilidades.Mensaje;
 import Utilidades.Utilidades;
+import com.lowagie.text.DocumentException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 
 /**
@@ -131,7 +135,18 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_Btn_PortadaActionPerformed
 
     private void Btn_FusionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_FusionarActionPerformed
-        
+        for(int i=0; i<listaFusion.size(); i++){
+            try {
+                if(Utilidades.unirPdf(listaFusion.get(i).getCampo(1).toString(), "resultado 1")){
+                    System.out.println("Archivo fusionado");
+                }
+            } catch (DocumentException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        cargarListas();
     }//GEN-LAST:event_Btn_FusionarActionPerformed
 
     /**

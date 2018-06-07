@@ -17,6 +17,7 @@ CREATE TABLE hv_personas (
 	tipo_vinculacion character varying(255) NOT NULL,
 	creado boolean default false,
 	fusionado boolean default false,
+	orden character varying(255) NOT NULL,
 	CONSTRAINT hv_personas_pkey PRIMARY KEY (id)
 )
 WITH (

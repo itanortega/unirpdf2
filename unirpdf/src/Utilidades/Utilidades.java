@@ -6,8 +6,19 @@
 package Utilidades;
 
 import Gestores.GestorBd;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
 import java.awt.Font;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import static java.lang.System.in;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -146,6 +157,18 @@ public class Utilidades {
         calendar.set(Calendar.MILLISECOND,0);
         return calendar.getTime();
     }
+
+    private static String obtenerRutaProyecto() {
+        File miDir = new File (".");
+        String dir = "";
+        try {
+            dir =  miDir.getCanonicalPath();
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        return dir;
+    }
     
     public static boolean crearPdf(String cedula){
         String rutasalida= obtenerRutaProyecto() + "/Rep/Portadas/portada_"+cedula+".pdf";
@@ -161,17 +184,39 @@ public class Utilidades {
         }        
         return true;
     }
+    
+    public static boolean unirPdf(String cedula, String nombre) throws FileNotFoundException, DocumentException, IOException{
 
-    private static String obtenerRutaProyecto() {
-        File miDir = new File (".");
-        String dir = "";
-        try {
-            dir =  miDir.getCanonicalPath();
-        }catch(Exception e) {
-            e.printStackTrace();
+        Document document = new Document();
+        
+        FileInputStream archivo1 = new FileInputStream(new File(obtenerRutaProyecto() + "/Rep/Portadas/portada_"+cedula+".pdf"));
+        FileInputStream archivo2 = new FileInputStream(new File(obtenerRutaProyecto() + "/Rep/Soportes/"+cedula+".pdf"));        
+        FileOutputStream outputStream = new FileOutputStream(new File(obtenerRutaProyecto() + "/Rep/Resultados/" + nombre + ".pdf"));
+        
+        
+        PdfWriter writer = PdfWriter.getInstance(document, outputStream);
+        document.open();
+        PdfContentByte cb = writer.getDirectContent();
+        
+        PdfReader reader1 = new PdfReader(archivo1);
+        for (int i = 1; i <= reader1.getNumberOfPages(); i++) {
+            document.newPage();
+            PdfImportedPage page = writer.getImportedPage(reader1, i);
+            cb.addTemplate(page, 0, 0);
         }
         
-        return dir;
+        PdfReader reader2 = new PdfReader(archivo2);
+        for (int i = 1; i <= reader2.getNumberOfPages(); i++) {
+            document.newPage();
+            PdfImportedPage page = writer.getImportedPage(reader2, i);
+            cb.addTemplate(page, 0, 0);
+        }
+        
+        outputStream.flush();
+        document.close();
+        outputStream.close();
+        
+        return true;
     }
 
 }
