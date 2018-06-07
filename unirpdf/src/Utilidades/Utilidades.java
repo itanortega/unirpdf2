@@ -21,14 +21,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporter;
-import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.export.JRHtmlExporter;
-import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
-import net.sf.jasperreports.engine.export.JRPdfExporter;
 
 
 /**
@@ -153,12 +148,12 @@ public class Utilidades {
     }
     
     public static boolean crearPdf(String cedula){
-        String rutasalida= obtenerRutaProyecto() + "/Salida/portada_"+cedula+".pdf";
+        String rutasalida= obtenerRutaProyecto() + "/Rep/Portadas/portada_"+cedula+".pdf";
         Map parameters = new HashMap();
-//        parameters.put("identificacion", "1085258548");
+        parameters.put("identificacion", cedula);
         JasperPrint jasperPrint;
         try {
-            jasperPrint = JasperFillManager.fillReport(obtenerRutaProyecto() + "/Reportes/HojaVidaPares.jasper", parameters, GestorBd.getConexion());
+            jasperPrint = JasperFillManager.fillReport(obtenerRutaProyecto() + "/Rep/Reportes/HojaVidaPares.jasper", parameters, GestorBd.getConexion());
             JasperExportManager.exportReportToPdfFile(jasperPrint, rutasalida);
         } catch (JRException ex) {
             ex.printStackTrace();
