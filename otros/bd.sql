@@ -40,7 +40,7 @@ WITH (
 );
 
 /*
- insert into hv_personas(numero_identificacion,nombre, lugar_nacimiento, facultad, programa, fecha_inicio, fecha_fin, anios, escalafon,tipo_vinculacion) values ('1085258548','CHRISTIAN SEGUNDO ORTEGA', 'PASTO', 'FACULTAD DE INGENIERÍA', 'INGENIERÍA DE SISTEMAS', '2013-02-13', '2018-12-31', 5, 'nivel 100','TIEMPO COMPLETO');
+ insert into hv_personas(numero_identificacion,nombre, lugar_nacimiento, facultad, programa, fecha_inicio, fecha_fin, anios, escalafon,tipo_vinculacion,orden) values ('1085258548','CHRISTIAN SEGUNDO ORTEGA', 'PASTO', 'FACULTAD DE INGENIERÍA', 'INGENIERÍA DE SISTEMAS', '2013-02-13', '2018-12-31', 5, 'nivel 100','TIEMPO COMPLETO','34');
   INSERT INTO hv_estudios(universidad, titulo, anio, id_persona) values
   ('Universidad de nariño', 'Tecnólogo en computación', '2008', 1),
   ('Universidad abierta y a distancia', 'Ingeniero de sistemas', '2016', 1),

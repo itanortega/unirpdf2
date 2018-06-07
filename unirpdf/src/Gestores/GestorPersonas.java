@@ -24,7 +24,7 @@ public class GestorPersonas{
         int id = 0;
         ResultSet rs = null;
         SQL sql = new SQL()
-                .select("id,numero_identificacion")
+                .select("id,numero_identificacion,nombre,orden")
                 .from("hv_personas")  
                 .where("creado", "=", false);
 
@@ -34,7 +34,9 @@ public class GestorPersonas{
                 while (rs.next()) {
                     r = new Registro();
                     r.setCampo0(rs.getLong("id"));
-                    r.setCampo1(rs.getLong("numero_identificacion"));
+                    r.setCampo1(rs.getString("numero_identificacion"));
+                    r.setCampo2(rs.getString("nombre"));
+                    r.setCampo3(rs.getString("orden"));
                     registros.add(r);
                 }
             }
@@ -51,7 +53,7 @@ public class GestorPersonas{
         int id = 0;
         ResultSet rs = null;
         SQL sql = new SQL()
-                .select("id,numero_identificacion")
+                .select("id,numero_identificacion,nombre,orden")
                 .from("hv_personas")  
                 .where("fusionado", "=", false);
 
@@ -61,7 +63,9 @@ public class GestorPersonas{
                 while (rs.next()) {
                     r = new Registro();
                     r.setCampo0(rs.getLong("id"));
-                    r.setCampo1(rs.getLong("numero_identificacion"));
+                    r.setCampo1(rs.getString("numero_identificacion"));
+                    r.setCampo2(rs.getString("nombre"));
+                    r.setCampo3(rs.getString("orden"));
                     registros.add(r);
                 }
             }
@@ -70,4 +74,17 @@ public class GestorPersonas{
         }
         return registros;
     }
+    
+    public boolean actualizarEstado(String cedula, String campo) {
+        String metodo = "actualizarEstado";
+        boolean res = false;
+        String sql = "UPDATE hv_personas SET " + campo + "=true WHERE numero_identificacion = '" + cedula + "' ";
+        
+        if(GestorBd.ejecutarSentenciaSQL(sql, metodo)){
+            res = true;
+        }
+
+        return res; 
+    }
+
 }

@@ -24,6 +24,8 @@ import javax.swing.DefaultListModel;
 public class Main extends javax.swing.JFrame {
     ArrayList<Registro> listaPortada = new ArrayList<>();
     ArrayList<Registro> listaFusion = new ArrayList<>();
+    ArrayList<Registro> listaPortada_lista = new ArrayList<>();
+    ArrayList<Registro> listaFusion_lista = new ArrayList<>();
     GestorPersonas gestorPersonas = new GestorPersonas();
     /**
      * Creates new form Main
@@ -37,7 +39,15 @@ public class Main extends javax.swing.JFrame {
             System.exit(0);
         }
         
-        cargarListas();
+        listaPortada = gestorPersonas.faltanPorGenerarPortada(false);
+        listaFusion = gestorPersonas.faltanPorFusionar(false);
+        
+        listaPortada_lista = gestorPersonas.faltanPorGenerarPortada(false);
+        listaFusion_lista = gestorPersonas.faltanPorFusionar(false);
+        
+
+        cargarListaPortada();
+        cargarListaFusion();
     }
 
     /**
@@ -126,19 +136,35 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void Btn_PortadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_PortadaActionPerformed
+        String cedula = "";
+        
         for(int i=0; i<listaPortada.size(); i++){
-            if(Utilidades.crearPdf(listaPortada.get(i).getCampo(1).toString())){
-                System.out.println("Archivo creado");
+            cedula = listaPortada.get(i).getCampo(1).toString();
+            if(Utilidades.crearPdf(cedula)){
+                if(gestorPersonas.actualizarEstado(cedula, "creado")){
+                    cargarListaPortada();
+                }
             }
         }
-        cargarListas();
     }//GEN-LAST:event_Btn_PortadaActionPerformed
 
     private void Btn_FusionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_FusionarActionPerformed
+        String cedula = "";
+        String nombre = "";
+        String orden = "";
+        String nombreArchivo = "";
+        
         for(int i=0; i<listaFusion.size(); i++){
+            cedula = listaFusion.get(i).getCampo(1).toString();
+            nombre = listaFusion.get(i).getCampo(2).toString();
+            orden = listaFusion.get(i).getCampo(3).toString();
+            nombreArchivo = orden + "_" + cedula + "_" + nombre;
+                    
             try {
-                if(Utilidades.unirPdf(listaFusion.get(i).getCampo(1).toString(), "resultado 1")){
-                    System.out.println("Archivo fusionado");
+                if(Utilidades.unirPdf(cedula, nombreArchivo)){
+                    if(gestorPersonas.actualizarEstado(cedula, "fusionado")){
+                        cargarListaFusion();
+                    }
                 }
             } catch (DocumentException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -146,7 +172,6 @@ public class Main extends javax.swing.JFrame {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        cargarListas();
     }//GEN-LAST:event_Btn_FusionarActionPerformed
 
     /**
@@ -195,32 +220,44 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
 
-    private void cargarListas() {
+    private void cargarListaPortada() {
+        listaPortada_lista = gestorPersonas.faltanPorGenerarPortada(false);
         DefaultListModel modeloPortada=new DefaultListModel();
-        DefaultListModel modeloFusion=new DefaultListModel();
         
         modeloPortada.removeAllElements();
-        modeloFusion.removeAllElements();
-        
-        listaPortada = gestorPersonas.faltanPorGenerarPortada(false);
-        listaFusion = gestorPersonas.faltanPorFusionar(false);
         
         Btn_Portada.setEnabled(false);
+        
+        int i;
+        if(listaPortada_lista.size()>0){;
+            Btn_Portada.setEnabled(true);
+            for(i=0; i<listaPortada_lista.size();i++){
+                modeloPortada.addElement(listaPortada_lista.get(i).getCampo(1).toString());
+            }
+            Lst_Portada.setModel(modeloPortada);
+        }else{
+            modeloPortada.removeAllElements();
+            Lst_Portada.setModel(modeloPortada);
+        }
+    }
+    
+    private void cargarListaFusion() {
+        listaFusion_lista = gestorPersonas.faltanPorFusionar(false);
+        DefaultListModel modeloFusion=new DefaultListModel();
+        
+        modeloFusion.removeAllElements();
+        
         Btn_Fusionar.setEnabled(false);
         
         int i;
-        if(listaPortada.size()>0){
-            Btn_Portada.setEnabled(true);
-            for(i=0; i<listaPortada.size();i++){
-                modeloPortada.addElement(listaPortada.get(i).getCampo(1).toString());
-            }
-            Lst_Portada.setModel(modeloPortada);
-        }
-        if(listaFusion.size()>0){
+        if(listaFusion_lista.size()>0){
             Btn_Fusionar.setEnabled(true);
-            for(i=0; i<listaFusion.size();i++){
-                modeloFusion.addElement(listaFusion.get(i).getCampo(1).toString());
+            for(i=0; i<listaFusion_lista.size();i++){
+                modeloFusion.addElement(listaFusion_lista.get(i).getCampo(1).toString());
             }
+            Lst_Fusion.setModel(modeloFusion);
+        }else{
+            modeloFusion.removeAllElements();
             Lst_Fusion.setModel(modeloFusion);
         }
     }
